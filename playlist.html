@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Playlist - MAAN Music</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    body {
+      background: #342436;
+      color: #eee;
+      font-family: 'Poppins', sans-serif;
+      padding: 30px;
+    }
+
+    .playlist-container {
+      max-width: 370px; /* Half width */
+      margin: auto;
+    }
+
+    .audio-card {
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid #ebd6dc;
+      border-radius: 15px;
+      padding: 15px;
+      margin-bottom: 25px;
+      box-shadow: 0 0 15px #000;
+    }
+
+    .audio-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    .audio-card h5 {
+      margin: 8px 0;
+      color: #ebd6dc;
+      font-size: 1.1rem;
+    }
+
+    .btn-group {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .download-btn {
+      background: #ebd6dc;
+      color: #342436;
+      padding: 6px 12px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-align: center;
+      text-decoration: none;
+      border-radius: 6px;
+      transition: 0.3s;
+    }
+
+    .download-btn:hover {
+      background: #fff;
+      color: #000;
+    }
+
+    .remove-btn {
+      background: #ff4d4d;
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 20px;
+      line-height: 28px;
+      text-align: center;
+      padding: 0;
+      border: none;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .remove-btn:hover {
+      background: #ff1a1a;
+    }
+
+    h2.text-center {
+  font-size: 2.5rem;
+  font-weight: 800;
+  text-align: center;
+  background: linear-gradient(90deg, #ff66a6, #f5d3e2, #c084fc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 15px rgba(255, 102, 166, 0.5);
+  position: relative;
+  margin-bottom: 2.5rem;
+  padding-bottom: 10px;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Underline glow effect */
+h2.text-center::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 4px;
+  width: 80px;
+  border-radius: 2px;
+  background: radial-gradient(circle, #ff66a6, #f5d3e2);
+  box-shadow: 0 0 10px #ff66a6aa;
+}
+@media (max-width: 500px) {
+  h2.text-center {
+    font-size: 1.8rem;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <div class="playlist-container">
+    <h2 class="text-center">Your Playlist</h2>
+    <div id="playlistDisplay"></div>
+  </div>
+
+  <script>
+    // Load playlist from localStorage or use default
+    let playlist = JSON.parse(localStorage.getItem("maanPlaylist")) || [
+      { title: "DIL MANE NA", img: "dil mane na.jpeg", src: "dil mane na.mpeg" },
+      { title: "RAATEIN REMIX", img: "raatein.jpeg", src: "raatein remix.mpeg" }
+    ];
+
+    const displayDiv = document.getElementById("playlistDisplay");
+
+    function renderPlaylist() {
+      displayDiv.innerHTML = "";
+      if (playlist.length === 0) {
+        displayDiv.innerHTML = "<p class='text-center'>No songs in playlist.</p>";
+        return;
+      }
+
+      playlist.forEach((song, index) => {
+        const div = document.createElement("div");
+        div.className = "audio-card";
+        div.innerHTML = `
+          <img src="${song.img}" alt="${song.title}">
+          <h5>${song.title}</h5>
+          <audio controls>
+            <source src="${song.src}" type="audio/mp3">
+          </audio>
+          <div class="btn-group">
+            <a class="download-btn" href="${song.src}" download>Download</a>
+            <button class="remove-btn" onclick="removeSong(${index})">-</button>
+          </div>
+        `;
+        displayDiv.appendChild(div);
+      });
+    }
+
+    function removeSong(index) {
+      if (confirm("Are you sure you want to remove this song from playlist?")) {
+        playlist.splice(index, 1);
+        localStorage.setItem("maanPlaylist", JSON.stringify(playlist));
+        renderPlaylist();
+      }
+    }
+
+    renderPlaylist();
+  </script>
+</body>
+</html>
